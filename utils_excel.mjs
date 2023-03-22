@@ -34,7 +34,7 @@ const cellname_to_dataarrayindex = (cellname) => {
 };
 
 const backup_file = async () => {
-    if (SETTINGS.BACKUPDESTDIR) await copyFile(SETTINGS.EXCELFILEPATH, join_path(SETTINGS.BACKUPDESTDIR, "db.bk-"+Date.now()+".xlsx"));
+    if (SETTINGS.BACKUPDESTDIR) return await copyFile(SETTINGS.EXCELFILEPATH, join_path(SETTINGS.BACKUPDESTDIR, "db.bk-"+Date.now()+".xlsx"));
 };
 
 /**
@@ -107,4 +107,8 @@ export const get_data_rows = async (start, number_of_rows) => {
     const arr = utils.sheet_to_json(first_worksheet, {header: SETTINGS.EXCELHEADER, range: 1, defval: ""});
     number_of_rows = number_of_rows? number_of_rows : arr.length;
     return arr.slice(start, start + number_of_rows);
+};
+
+export const get_currentconsumer_ratelimit = () => {
+    return get_data_rows().filter(row => row.apikey===settings.request.apikey).rate;
 };
