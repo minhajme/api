@@ -16,5 +16,8 @@
     "redis": "^4.6.5",
     "shurjopay": "^0.10.3",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
+  },
+  "devDependencies": {
+    "prettier": "2.8.6"
   }
 }

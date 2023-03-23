@@ -18,7 +18,7 @@ const test_settings = {
     pass_handler: (msg) => {
         console.log(msg);
     },
-    fail_handler: test_fail_handler
+    fail_handler: test_fail_handler,
 };
 
 export const generate_apikey = () => {
@@ -30,19 +30,30 @@ export const generate_apikey = () => {
  * @return {array} with two elements [ <apikey>, <stock_symbols> ]
  */
 function parse_apiurl(url) {
-    const portions = url.replace('/vr/', '').replace(/^\/+|\/+$/g, '').split('/');
+    const portions = url
+        .replace("/vr/", "")
+        .replace(/^\/+|\/+$/g, "")
+        .split("/");
     return {
         apikey: portions[0],
-        stocksymbols: portions[1]
+        stocksymbols: portions[1],
     };
 }
 
 function apiurl() {
-    return (settings.https? 'https':'http')+'://'
-            +settings.apiurlhost+':'+settings.apiurlport +'/'+ 
-            join(settings.apiurlprefix, 
-            settings.current_apiconsumer_key, 
-            settings.current_apiconsumer_stocksymbol);
+    return (
+        (settings.https ? "https" : "http") +
+        "://" +
+        settings.apiurlhost +
+        ":" +
+        settings.apiurlport +
+        "/" +
+        join(
+            settings.apiurlprefix,
+            settings.current_apiconsumer_key,
+            settings.current_apiconsumer_stocksymbol
+        )
+    );
 }
 
 /**
@@ -52,9 +63,9 @@ function apiurl() {
     callback runs over each array element
  */
 function run_omuk_times(callback, times) {
-	const elements = typeof times==='number'? Array(times) : times;
-    const result = elements.map(a => callback(a));
-    return typeof times==='number'? undefined : result;
+    const elements = typeof times === "number" ? Array(times) : times;
+    const result = elements.map((a) => callback(a));
+    return typeof times === "number" ? undefined : result;
 }
 
 /**
@@ -65,21 +76,21 @@ function run_omuk_times(callback, times) {
  * TODO note that our original settings object address is lost. 
  */
 const init_test_system = async ({ seed }) => {
-   const bkpath = await backup_file();
-   const prev_settings = copy_object(settings);
-   settings.EXCELFILEPATH = bkpath;
-   if (seed) seed();
-   return function close_test_system() {
+    const bkpath = await backup_file();
+    const prev_settings = copy_object(settings);
+    settings.EXCELFILEPATH = bkpath;
+    if (seed) seed();
+    return async function close_test_system() {
         await removeFile(bkpath);
         settings = prev_settings;
         return true;
-   };
+    };
 };
 
 /** * unit testing helper methods, on test fail they throw Error */
 
 const assert_equal = (eta, ota, msg) => {
-    msg = msg? msg : "assert fail";
+    msg = msg ? msg : "assert fail";
     if (eta !== ota) throw new Error(msg);
 };
 
@@ -88,7 +99,7 @@ const assert_truthy = (v, msg) => {
 };
 
 const assert_true = (v, strict) => {
-    const outcome = strict? v===true : v==true;
+    const outcome = strict ? v === true : v == true;
     if (!outcome) test_fail_handler("not true");
 };
 
@@ -104,7 +115,7 @@ const assert_notjson = (text) => {
 };
 
 const assert_substring = (text, sub, msg) => {
-    msg = msg? msg : "assert fail";
+    msg = msg ? msg : "assert fail";
     if (!text.includes(sub)) test_fail_handler(msg);
 };
 
@@ -114,17 +125,16 @@ const assert_redis_running = () => {
     if (!client.isReady) test_fail_handler("redis not ready");
 };
 
-
 export {
-generate_apikey,
-run_omuk_times,
-generate_apikey,
-parse_apiurl,
-init_test_system,
-assert_true,
-assert_equal,
-assert_json,
-assert_substring,
-}
+    generate_apikey,
+    run_omuk_times,
+    generate_apikey,
+    parse_apiurl,
+    init_test_system,
+    assert_true,
+    assert_equal,
+    assert_json,
+    assert_substring,
+};
 
 //END
