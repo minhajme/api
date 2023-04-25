@@ -1,2 +1,3 @@
-index.js for ui server
-apiserver.js for the actual api provider
+## NodeJS Library for API server, Like FastAPI
+
+Write consumable api services, ratelimited, authenticated.
